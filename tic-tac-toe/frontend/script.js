@@ -1,34 +1,25 @@
-const API = "http://localhost:5000";
+const API = ""; // Fixed: Swapped localhost out for relative pathing
 
 const boardDiv = document.getElementById("board");
 const statusDiv = document.getElementById("status");
 
 async function loadGame() {
-
-    const response =
-        await fetch(`${API}/game`);
-
+    const response = await fetch(`${API}/game`);
     const game = await response.json();
-
     render(game);
 }
 
 function render(game) {
-
     boardDiv.innerHTML = "";
 
-    game.board.forEach((value,index)=>{
-
-        const cell =
-            document.createElement("div");
-
+    game.board.forEach((value, index) => {
+        const cell = document.createElement("div");
         cell.classList.add("cell");
-
         cell.innerText = value;
 
         cell.addEventListener(
             "click",
-            ()=>makeMove(index)
+            () => makeMove(index)
         );
 
         boardDiv.appendChild(cell);
@@ -49,43 +40,33 @@ function render(game) {
 }
 
 async function makeMove(index) {
-
-    try{
-
-        const response =
-        await fetch(`${API}/move`,{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
+    try {
+        const response = await fetch(`${API}/move`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                index:index
+            body: JSON.stringify({
+                index: index
             })
         });
 
-        const game =
-            await response.json();
-
+        const game = await response.json();
         render(game);
-
     }
-    catch(error){
+    catch(error) {
         alert("Error updating game");
     }
 }
 
 document
 .getElementById("resetBtn")
-.addEventListener("click",async()=>{
-
-    const response =
-    await fetch(`${API}/reset`,{
-        method:"POST"
+.addEventListener("click", async () => {
+    const response = await fetch(`${API}/reset`, {
+        method: "POST"
     });
 
-    const game =
-    await response.json();
-
+    const game = await response.json();
     render(game);
 });
 
